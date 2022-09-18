@@ -15,22 +15,27 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
+          TaskManager: {
+            screens: {
+              TaskManagerScreen: 'taskScreen'
+            }
+          },
           TabOne: {
             screens: {
-              TabOneScreen: 'one',
-            },
+              TabOneScreen: 'one'
+            }
           },
           TabTwo: {
             screens: {
-              TabTwoScreen: 'two',
-            },
-          },
-        },
+              TabTwoScreen: 'two'
+            }
+          }
+        }
       },
       Modal: 'modal',
-      NotFound: '*',
-    },
-  },
+      NotFound: '*'
+    }
+  }
 };
 
 export default linking;
