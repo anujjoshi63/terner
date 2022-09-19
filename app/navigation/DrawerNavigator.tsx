@@ -15,8 +15,8 @@ function DrawerNavigator() {
     <Drawer.Navigator
       initialRouteName='TaskManager'
       screenOptions={({ navigation }) => ({
+        headerShadowVisible: false,
         sceneContainerStyle: { backgroundColor: '#fff' },
-        h: { paddingBottom: 12 },
         headerTitleAlign: 'center',
         headerLeft: () => (
           <Pressable

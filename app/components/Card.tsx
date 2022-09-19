@@ -1,20 +1,27 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
+
+import { hp } from '@themes';
 
 interface IProps {
   children: React.ReactNode;
-  backgroundColor?: string;
+  backgroundColor: string;
+  style?: ViewStyle;
 }
 
-export const Card: React.FC<IProps> = ({ children, backgroundColor }) => {
+export const Card: React.FC<IProps> = ({
+  children,
+  backgroundColor,
+  style
+}) => {
   return (
-    <View
-      style={[styles.card, { backgroundColor: backgroundColor || '#4BEED1' }]}
-    >
-      {children}
-    </View>
+    <View style={[styles.card, style, { backgroundColor }]}>{children}</View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {}
+  card: {
+    paddingVertical: hp(16),
+    paddingHorizontal: hp(24),
+    borderRadius: hp(25)
+  }
 });
