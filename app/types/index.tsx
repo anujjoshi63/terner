@@ -20,7 +20,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootDrawerParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
-  AddTask: undefined;
+  AddTask: { mode: 'edit' | 'add'; taskId?: string };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

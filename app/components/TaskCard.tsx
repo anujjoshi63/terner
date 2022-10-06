@@ -4,26 +4,21 @@ import { Card } from './Card';
 import { Pill } from './Pill';
 import { Calendar, Clock, Edit, hp, MarkAsDone, sharedStyles } from '@themes';
 import { formatDate, formatTime } from '@utils/dateTime';
+import { ITask } from '@types';
 
 interface IProps {
-  backgroundColor: string;
-  borderColor: string;
-  title: string;
-  taskId: string;
-  dateTime: Date;
+  task: ITask;
   onDeleteTask: (taskId: string) => void;
-  labels?: string[];
+  onEditTask: (taskId: string) => void;
 }
 
 export const TaskCard: React.FC<IProps> = ({
-  backgroundColor,
-  borderColor,
-  title,
-  dateTime,
-  onDeleteTask,
-  taskId,
-  labels
+  task,
+  onEditTask,
+  onDeleteTask
 }) => {
+  const { backgroundColor, labels, borderColor, title, dateTime, taskId } =
+    task;
   return (
     <Card backgroundColor={backgroundColor} style={styles.card}>
       <View style={styles.taskCardHeader}>
@@ -33,7 +28,9 @@ export const TaskCard: React.FC<IProps> = ({
               <Pill text={label} borderColor={borderColor} key={label} />
             ))}
         </View>
-        <Edit />
+        <Pressable onPress={() => onEditTask(task.taskId)}>
+          <Edit />
+        </Pressable>
       </View>
       <View style={styles.taskCardFooter}>
         <View>

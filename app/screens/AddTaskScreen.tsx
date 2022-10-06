@@ -1,5 +1,7 @@
 import { useAtom } from 'jotai';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Toast } from 'react-native-toast-message/lib/src/Toast';
@@ -12,20 +14,14 @@ import {
   Text,
   TextInput
 } from '@components';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { tasksAtom } from '@stores';
-import { Colors, hp, sharedStyles, TaskColors, wp } from '@themes';
+import { Colors, hp, sharedStyles, TaskColors } from '@themes';
 import { formatDateTime } from '@utils/dateTime';
 
 type TProps = NativeStackScreenProps<RootStackParamList, 'AddTask'>;
 
 export const AddTaskScreen: React.FC<TProps> = ({ navigation, route }) => {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'New Task'
-    });
-  }, []);
-
   const [tasks, setTasks] = useAtom(tasksAtom);
 
   const [taskTitle, setTaskTitle] = useState('');
@@ -35,6 +31,38 @@ export const AddTaskScreen: React.FC<TProps> = ({ navigation, route }) => {
 
   const [isAddDisabled, setIsAddDisabled] = useState(true);
   const [isVisible, setVisible] = useState(false);
+
+  const [taskMode, setTaskMode] = useState<'add' | 'edit'>('add');
+  const [taskId, setTaskId] = useState<string>(Math.random().toString());
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: route.params.mode === 'add' ? 'New Task' : 'Edit Task'
+    });
+  }, [route.params]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const mode = route.params.mode;
+      if (mode === 'edit') {
+        setTaskMode('edit');
+        const taskId = route.params.taskId;
+        if (taskId) {
+          setTaskId(taskId);
+          const task = tasks.find(task => task.taskId === taskId);
+          if (task) {
+            setTaskTitle(task.title);
+            setTaskLabels(task.labels?.join(', ') || '');
+            setDate(task.dateTime);
+            setTaskColor({
+              backgroundColor: task.backgroundColor,
+              borderColor: task.borderColor
+            });
+          }
+        }
+      }
+    }, [route.params])
+  );
 
   useEffect(() => {
     if (taskTitle !== '' && date) {
@@ -54,31 +82,50 @@ export const AddTaskScreen: React.FC<TProps> = ({ navigation, route }) => {
     setTaskColor(color);
   };
 
-  const addTaskHandler = () => {
+  const createTask = () => {
     const labels = taskLabels.split(',').map(label => label.trim());
 
     const newTask: ITask = {
       title: taskTitle,
       dateTime: date,
-      taskId: Math.random().toString(),
+      taskId,
       backgroundColor: taskColor.backgroundColor,
       borderColor: taskColor.borderColor,
       labels
     };
-    setTasks([...tasks, newTask]);
+
+    return newTask;
+  };
+
+  const showToastAndNavigate = () => {
     Toast.show({
       type: 'success',
-      text1: 'Task Added!🎉',
+      text1: `Task ${taskMode === 'add' ? 'Added' : 'Edited'}!🎉`,
       text2: 'Keep the flow going.',
       position: 'bottom'
     });
     navigation.navigate('Root');
   };
 
+  const addTaskHandler = () => {
+    const newTask = createTask();
+    setTasks([...tasks, newTask]);
+    showToastAndNavigate();
+  };
+
+  const editTaskHandler = () => {
+    const editedTask = createTask();
+    const taskIndex = tasks.findIndex(task => task.taskId === taskId);
+    const newTasks = [...tasks];
+    newTasks[taskIndex] = { ...editedTask };
+    setTasks(newTasks);
+    showToastAndNavigate();
+  };
+
   return (
     <View style={styles.screen}>
       <View>
-        <Label text='My New Task' />
+        <Label text={'Title'} />
         <TextInput
           maxLength={50}
           autoFocus={true}
@@ -124,10 +171,10 @@ export const AddTaskScreen: React.FC<TProps> = ({ navigation, route }) => {
 
       <View>
         <PrimaryButton
-          title='Add Task'
+          title={taskMode === 'add' ? 'Add Task' : 'Update Task'}
           style={[styles.addTaskButton, isAddDisabled && { opacity: 0.7 }]}
           disabled={isAddDisabled}
-          onPress={addTaskHandler}
+          onPress={taskMode === 'add' ? addTaskHandler : editTaskHandler}
         />
       </View>
     </View>

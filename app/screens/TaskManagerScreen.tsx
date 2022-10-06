@@ -24,6 +24,13 @@ export const TaskManagerScreen: React.FC<TProps> = ({ navigation }) => {
     });
   };
 
+  const editTaskHandler = (taskId: string) => {
+    navigation.navigate('AddTask', {
+      mode: 'edit',
+      taskId
+    });
+  };
+
   return (
     <View style={styles.screen}>
       <Text style={sharedStyles.h3}>Hello Mubin!</Text>
@@ -31,9 +38,10 @@ export const TaskManagerScreen: React.FC<TProps> = ({ navigation }) => {
       <ScrollView style={styles.tasksContainer}>
         {tasks.map(task => (
           <TaskCard
-            {...task}
+            task={task}
             key={task.title}
             onDeleteTask={deleteTaskHandler}
+            onEditTask={editTaskHandler}
           />
         ))}
       </ScrollView>
@@ -41,7 +49,7 @@ export const TaskManagerScreen: React.FC<TProps> = ({ navigation }) => {
         title='Add Task'
         style={styles.addTaskButton}
         icon={<AddTask />}
-        onPress={() => navigation.navigate('AddTask')}
+        onPress={() => navigation.navigate('AddTask', { mode: 'add' })}
       />
       <View style={styles.navigationContainer}>
         <PrimaryButton title='Today' textStyle={styles.navigationButtonText} />
