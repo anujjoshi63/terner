@@ -17,22 +17,32 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  Root: NavigatorScreenParams<RootDrawerParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
+  AddTask: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
 
-export type RootTabParamList = {
+export type RootDrawerParamList = {
   TabOne: undefined;
   TabTwo: undefined;
   TaskManager: undefined;
 };
 
-export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
+export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<RootTabParamList, Screen>,
+    BottomTabScreenProps<RootDrawerParamList, Screen>,
     NativeStackScreenProps<RootStackParamList>
   >;
+
+export interface ITask {
+  backgroundColor: string;
+  borderColor: string;
+  labels?: string[];
+  title: string;
+  dateTime: Date;
+  taskId: string;
+}

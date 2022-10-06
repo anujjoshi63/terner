@@ -2,6 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "moduleResolution": "Node16",
     "baseUrl": ".",
     "paths": {
       "@assets/*": ["assets/*"],
@@ -11,7 +12,9 @@
       "@navigation/*": ["navigation/*"],
       "@screens": ["screens"],
       "@utils/*": ["utils/*"],
-      "@themes": ["themes/index.ts"]
+      "@themes": ["themes/index.ts"],
+      "@types": ["types/index.tsx"],
+      "@stores": ["stores/index.ts"]
     }
   }
 }

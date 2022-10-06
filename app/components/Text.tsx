@@ -1,6 +1,6 @@
 import {
   StyleSheet,
-  Text as BuiltInText,
+  Text as NativeText,
   TextProps,
   TextStyle,
   View
@@ -10,15 +10,18 @@ import { Colors, Fonts } from '@themes';
 
 interface IProps {
   children: React.ReactNode;
-  style?: TextStyle;
-  props?: TextProps;
+  style?: TextStyle | TextStyle[];
 }
 
-export const Text: React.FC<IProps> = ({ children, style, props }) => {
+export const Text: React.FC<IProps & TextProps> = ({
+  children,
+  style,
+  ...props
+}) => {
   return (
-    <BuiltInText {...props} style={[styles.text, style]}>
+    <NativeText {...props} style={[styles.text, style]}>
       {children}
-    </BuiltInText>
+    </NativeText>
   );
 };
 

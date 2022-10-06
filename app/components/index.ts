@@ -5,3 +5,7 @@ export * from './EditScreenInfo';
 export * from './Card';
 export * from './Pill';
 export * from './TaskCard';
+export * from './PrimaryButton';
+export * from './TextInput';
+export * from './Label';
+export * from './ColorCircle';

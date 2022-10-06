@@ -1,14 +1,14 @@
 import { Pressable } from 'react-native';
-import { RootTabParamList, RootTabScreenProps } from 'types';
+import { RootDrawerParamList, RootDrawerScreenProps } from 'types';
 
 import { FontAwesome } from '@expo/vector-icons';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { ProfilePic } from '@components';
-import { TabOneScreen, TaskManagerScreen } from '@screens';
+import { TabOneScreen, TabTwoScreen, TaskManagerScreen } from '@screens';
 import { Hamburger } from '@themes';
 
-const Drawer = createDrawerNavigator<RootTabParamList>();
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
 function DrawerNavigator() {
   return (
@@ -40,7 +40,15 @@ function DrawerNavigator() {
       <Drawer.Screen
         name='TabOne'
         component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
+        options={({ navigation }: RootDrawerScreenProps<'TabOne'>) => ({
+          title: 'Tab One',
+          drawerIcon: ({ color }) => <TabBarIcon name='code' color={color} />
+        })}
+      />
+      <Drawer.Screen
+        name='TabTwo'
+        component={TabTwoScreen}
+        options={({ navigation }: RootDrawerScreenProps<'TabTwo'>) => ({
           title: 'Tab One',
           drawerIcon: ({ color }) => <TabBarIcon name='code' color={color} />
         })}

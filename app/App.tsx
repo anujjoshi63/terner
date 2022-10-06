@@ -6,14 +6,22 @@ import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import Toast from 'react-native-toast-message';
 
 import useCachedResources from './hooks/useCachedResources';
 import Navigation from './navigation';
 import { transformer, trpc } from './utils/trpc';
+import { RootStackParamList } from 'types';
 
 SplashScreen.preventAutoHideAsync();
 
 const { manifest } = Constants;
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
 
 const localhost = `http://${manifest!.debuggerHost?.split(':').shift()}:3001`;
 
@@ -58,6 +66,7 @@ export default function App() {
             <Navigation />
             <StatusBar />
           </View>
+          <Toast />
         </SafeAreaProvider>
       </QueryClientProvider>
     </trpc.Provider>
